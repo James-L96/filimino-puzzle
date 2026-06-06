@@ -1,6 +1,6 @@
 import pytest
 from models.cell import Cell
-from models.grid import Grid
+from models.grid import Grid, MoveResult
 
 
 class TestCell:
@@ -103,3 +103,67 @@ class TestGrid:
     def test_non_square_grid_dimensions(self, non_square_grid):
         assert non_square_grid.rows == 2
         assert non_square_grid.cols == 4
+
+
+class TestMove:
+    @pytest.fixture
+    def grid_with_givens(self):
+        givens = [(0, 0, 2), (1, 2, 1)]
+        return Grid(3, 3, givens)
+
+    def test_make_move_to_empty_cell_success(self, grid_with_givens):
+        result = grid_with_givens.make_move(0, 1, 3)
+        assert result.success is True
+        cell = grid_with_givens.get_cell(0, 1)
+        assert cell.value == 3
+
+    def test_make_move_message_on_success(self, grid_with_givens):
+        result = grid_with_givens.make_move(2, 2, 5)
+        assert "Placed 5 at (2, 2)" in result.message
+
+    def test_make_move_rejects_given_cell(self, grid_with_givens):
+        result = grid_with_givens.make_move(0, 0, 5)
+        assert result.success is False
+        assert "Cannot modify given cells" in result.message
+
+    def test_make_move_idempotent_same_value(self, grid_with_givens):
+        grid_with_givens.set_cell(2, 1, 4, is_given=False)
+        result = grid_with_givens.make_move(2, 1, 4)
+        assert result.success is True
+        assert "already has this value" in result.message
+
+    def test_make_move_replaces_different_value(self, grid_with_givens):
+        grid_with_givens.set_cell(0, 1, 3, is_given=False)
+        cell = grid_with_givens.get_cell(0, 1)
+        assert cell.value == 3
+
+        result = grid_with_givens.make_move(0, 1, 7)
+        assert result.success is True
+        assert cell.value == 7
+
+    def test_make_move_out_of_bounds_row(self, grid_with_givens):
+        result = grid_with_givens.make_move(5, 0, 3)
+        assert result.success is False
+        assert "Invalid position" in result.message
+
+    def test_make_move_out_of_bounds_col(self, grid_with_givens):
+        result = grid_with_givens.make_move(0, 5, 3)
+        assert result.success is False
+        assert "Invalid position" in result.message
+
+    def test_make_move_negative_coordinates(self, grid_with_givens):
+        result = grid_with_givens.make_move(-1, 0, 3)
+        assert result.success is False
+        assert "Invalid position" in result.message
+
+    def test_given_cell_unchanged_after_rejected_move(self, grid_with_givens):
+        original_cell = grid_with_givens.get_cell(0, 0)
+        assert original_cell.value == 2
+        assert original_cell.is_given is True
+
+        result = grid_with_givens.make_move(0, 0, 99)
+        assert result.success is False
+
+        still_cell = grid_with_givens.get_cell(0, 0)
+        assert still_cell.value == 2
+        assert still_cell.is_given is True
