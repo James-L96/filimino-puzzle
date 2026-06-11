@@ -1,4 +1,12 @@
+from dataclasses import dataclass
+
 from models.cell import Cell
+
+
+@dataclass
+class MoveResult:
+    success: bool
+    message: str
 
 
 class Grid:
@@ -23,3 +31,21 @@ class Grid:
             [{"value": cell.value, "is_given": cell.is_given} for cell in row]
             for row in self._grid
         ]
+
+    def make_move(self, row: int, col: int, value: int) -> MoveResult:
+        if not (0 <= row < self.rows and 0 <= col < self.cols):
+            return MoveResult(success=False, message=f"Invalid position ({row}, {col})")
+
+        cell = self._grid[row][col]
+
+        if cell.is_given:
+            return MoveResult(
+                success=False,
+                message="Cannot modify given cells",
+            )
+
+        if cell.value == value:
+            return MoveResult(success=True, message="Cell already has this value")
+
+        cell.value = value
+        return MoveResult(success=True, message=f"Placed {value} at ({row}, {col})")
