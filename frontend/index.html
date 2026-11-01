@@ -4,18 +4,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Filimino Puzzle</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src http://127.0.0.1:5000">
+  <title>Filomino Puzzle</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="renderer.js"></script>
+  <script src="renderer.js" defer></script>
 </head>
 
 <body>
   <div class="container">
-    <h1>Filimino Puzzle</h1>
-    <p>Welcome to the Filimino Puzzle solver</p>
-    <p>This is a placeholder page.</p>
-    <button id="clickMeBtn">Click Me</button>
-    <p id="responseMessage"></p>
+    <h1>Filomino</h1>
+
+    <div class="controls">
+      <label>Size
+        <select id="sizeSelect">
+          <option value="8" selected>8 × 8</option>
+          <option value="12">12 × 12</option>
+          <option value="16">16 × 16</option>
+          <option value="20">20 × 20</option>
+        </select>
+      </label>
+      <label>Difficulty
+        <select id="difficultySelect">
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </label>
+      <button id="newPuzzleBtn">New Puzzle</button>
+    </div>
+
+    <p class="hint">Click a cell, then press 1–9 to fill it. Press 0 or Backspace — or click the selected cell again — to clear. Right-click a group to change its color.</p>
+
+    <div id="boardWrap">
+      <div id="board"></div>
+      <div id="overlay"><span>Generating puzzle…</span></div>
+    </div>
+
+    <p id="status"></p>
   </div>
 </body>
 

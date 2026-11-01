@@ -16,17 +16,133 @@ body {
 .container {
   text-align: center;
   color: white;
-  padding: 40px;
+  padding: 32px 24px;
 }
 
 h1 {
   font-size: 3rem;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-p {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  opacity: 0.9;
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
 }
+
+.controls label {
+  font-size: 1rem;
+  opacity: 0.95;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+select,
+button {
+  font-size: 1rem;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255, 255, 255, 0.92);
+  color: #333;
+  cursor: pointer;
+}
+
+button:hover,
+select:hover {
+  background: #fff;
+}
+
+.hint {
+  font-size: 0.9rem;
+  opacity: 0.85;
+  margin-bottom: 16px;
+}
+
+#boardWrap {
+  position: relative;
+  width: min(92vmin, 640px);
+  margin: 0 auto;
+}
+
+#board {
+  display: grid;
+  gap: 1px;
+  background: #2b2b46;
+  border: 3px solid #2b2b46;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.cell {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  color: #222;
+  font-weight: 600;
+  font-size: calc(min(92vmin, 640px) / var(--n, 8) * 0.5);
+  user-select: none;
+  cursor: pointer;
+}
+
+.cell.given {
+  background: #d8dbe8;
+  font-weight: 800;
+  color: #111;
+  cursor: default;
+}
+
+.cell.selected {
+  outline: 3px solid #667eea;
+  outline-offset: -3px;
+}
+
+#overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 4px;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+#overlay.hidden {
+  display: none;
+}
+
+#status {
+  margin-top: 16px;
+  min-height: 1.5em;
+  font-size: 1.1rem;
+}
+
+#status.ok {
+  color: #b9f6ca;
+}
+
+#status.err {
+  color: #ffcdd2;
+}
+
+.cell.gc-0 { background: #ffd8d8; }
+.cell.gc-1 { background: #ffe8cc; }
+.cell.gc-2 { background: #fff3bf; }
+.cell.gc-3 { background: #d3f9d8; }
+.cell.gc-4 { background: #c3fae8; }
+.cell.gc-5 { background: #c5f6fa; }
+.cell.gc-6 { background: #d0ebff; }
+.cell.gc-7 { background: #dbe4ff; }
+.cell.gc-8 { background: #e5dbff; }
+.cell.gc-9 { background: #f3d9fa; }
+.cell.gc-10 { background: #ffd6e7; }
+.cell.gc-11 { background: #eadbc8; }
